@@ -1,53 +1,48 @@
 package com.example.predator.nulpandroid;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.example.predator.nulpandroid.Models.Result;
-import com.example.predator.nulpandroid.Retrofit.ApiUtils;
-import com.example.predator.nulpandroid.Retrofit.Service;
-import com.google.gson.Gson;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
-    private Service mApiService;
+
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment = null;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    fragment = new HomeFragment();
+                    break;
+            }
+            return loadFragment(fragment);
+
+        }
+    };
+
+    public boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mApiService = ApiUtils.getSOService();
-        getNews();
-
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    public void getNews() {
-        mApiService.getCharacters().enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.isSuccessful()) {
-                    Gson gson = new Gson();
-                    String json = gson.toJson(response.body());
-
-                    Log.i("Api Json", json);
-                } else {
-                    Log.e("Error", "News don't load");
-                    Toast.makeText(getApplicationContext(), "error loading from API",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Log.d("MainActivity", "error loading from API");
-                Toast.makeText(getApplicationContext(), "error loading from API",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 }

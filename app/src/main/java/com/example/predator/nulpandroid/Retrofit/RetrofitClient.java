@@ -20,3 +20,4 @@ class RetrofitClient {
         return retrofit;
     }
 }
+

@@ -14,5 +14,4 @@ public class Result {
     public List<Hero> getResults() {
         return results;
     }
-
 }
