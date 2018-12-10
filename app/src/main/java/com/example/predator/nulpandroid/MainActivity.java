@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     fragment = new HomeFragment();
                     break;
+                case R.id.navigation_dashboard:
+                    fragment = new FavouriteFragment();
+                    break;
             }
             return loadFragment(fragment);
 

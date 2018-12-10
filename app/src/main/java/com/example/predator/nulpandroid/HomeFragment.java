@@ -3,6 +3,8 @@ package com.example.predator.nulpandroid;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.predator.nulpandroid.Adapter.CharacterAdapter;
+import com.example.predator.nulpandroid.Models.Hero;
 import com.example.predator.nulpandroid.Models.Result;
 import com.example.predator.nulpandroid.Retrofit.ApiUtils;
 import com.example.predator.nulpandroid.Retrofit.Service;
@@ -27,9 +30,10 @@ import retrofit2.Response;
 /**
  * Created by Predator on 08.11.2018.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements CharacterAdapter.OnHeroCLickListener{
     private Service mApiService;
-    private CharacterAdapter mAdapter = new CharacterAdapter();
+
+    private CharacterAdapter mAdapter = new CharacterAdapter(this);
     @BindView(R.id.rv_info)
     RecyclerView mRvGames;
     @BindView(R.id.pullToRefresh)
@@ -82,4 +86,21 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onItemClick(Hero hero) {
+        Bundle data = new Bundle();
+        data.putString("name", hero.getName());
+        data.putString("species", hero.getSpecies());
+        data.putString("created", hero.getCreated());
+        data.putString("url_to_img", hero.getImage());
+        Fragment fragment = new HeroDetails();
+        fragment.setArguments(data);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction2 = fragmentManager.beginTransaction();
+        fragmentTransaction2.addToBackStack(null);
+        fragmentTransaction2.hide(HomeFragment.this);
+        fragmentTransaction2.add(android.R.id.content, fragment);
+        fragmentTransaction2.commit();
+    }
 }

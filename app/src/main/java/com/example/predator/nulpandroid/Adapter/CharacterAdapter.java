@@ -24,6 +24,11 @@ import butterknife.ButterKnife;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> {
     private List<Hero> mHeroes = new ArrayList<>();
+    private final OnHeroCLickListener onHeroCLickListener;
+
+    public CharacterAdapter(OnHeroCLickListener onItemCLickListener) {
+        this.onHeroCLickListener = onItemCLickListener;
+    }
 
     @NonNull
     @Override
@@ -52,7 +57,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.img)
         ImageView ivPicture;
         @BindView(R.id.name)
@@ -63,7 +68,19 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int posistion = getAdapterPosition();
+                    if (posistion != RecyclerView.NO_POSITION) {
+                        Hero film = mHeroes.get(posistion);
+                        onHeroCLickListener.onItemClick(film);
+                    }
+                }
+            });
         }
     }
-
+    public interface OnHeroCLickListener {
+        void onItemClick(Hero hero);
+    }
 }

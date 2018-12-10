@@ -52,4 +52,15 @@ public class Hero {
     public String getImage() {
         return image;
     }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public Hero(String name, String species, String created, String image) {
+        this.name = name;
+        this.species = species;
+        this.image = image;
+        this.created = created;
+    }
 }
